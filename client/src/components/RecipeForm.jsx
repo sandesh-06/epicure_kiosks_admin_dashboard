@@ -38,14 +38,12 @@ function RecipeForm({
       const recipeIndex = machine.recipes.findIndex(
         (r) => r.recipeId === editRecipeData.recipeId
       );
-      console.log(editRecipeData)
       if (recipeIndex !== -1) {
         formData.ingredients = editRecipeData.ingredients
         machine.recipes[recipeIndex] = formData
         alert("Recipe edited successfully!")
       }
     } else {
-
       if (!selectedCategory) {
         alert("Please select a category.")
         return;
@@ -170,7 +168,6 @@ function RecipeForm({
           defaultValue={0}
           {...register("sold", { required: true })}
           className="w-full px-3 py-2 bg-[#333333] rounded-lg focus:outline-none border border-[#131313] focus:border-[#6EE7B7]"
-          disabled={!(editRecipeData && Object.keys(editRecipeData).length > 0)}
         />
       </div>
 
