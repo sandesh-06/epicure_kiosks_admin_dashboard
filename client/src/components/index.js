@@ -5,6 +5,7 @@ import MobileMenu from "./MobileMenu";
 import Modal from "./Modal";
 import DispenserForm from "./DispenserForm";
 import RecipeForm from "./RecipeForm";
+import IngredientForm from "./IngredientForm";
 export{
     Header, 
     Table,
@@ -12,5 +13,6 @@ export{
     MobileMenu,
     Modal,
     DispenserForm,
-    RecipeForm
+    RecipeForm,
+    IngredientForm
 }

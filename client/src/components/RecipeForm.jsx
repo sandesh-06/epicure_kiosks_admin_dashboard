@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 function RecipeForm({
   setShowRecipeForm,
@@ -10,7 +11,8 @@ function RecipeForm({
   const ingredientData = JSON.parse(localStorage.getItem("ingredients"));
   const categories = ["Fast Food", "Dessert", "Beverages"];
   const machines = JSON.parse(localStorage.getItem("machines"))
-
+  const machine = machines.find((m) => m.machineId === machineId);
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -24,7 +26,9 @@ function RecipeForm({
   const [isIngridentDropdownOpen, setisIngridentDropdownOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("");
 
+  console.log(machines)
   useEffect(() => {
+
     if (editRecipeData && Object.keys(editRecipeData).length > 0) {
       setValue("recipeId", editRecipeData.recipeId);
       setValue("name", editRecipeData.name);
@@ -35,24 +39,26 @@ function RecipeForm({
   }, [editRecipeData, setValue]);
 
   const onSubmit = (formData) => {
-    const machine = machines.find((m) => m.machineId === machineId);
-
     if (editRecipeData && Object.keys(editRecipeData).length > 0) {
       const recipeIndex = machine.recipes.findIndex(
         (r) => r.recipeId === editRecipeData.recipeId
       );
+      formData.ingredients = machine.recipes[recipeIndex].ingredients
       machine.recipes[recipeIndex] = formData;
+      alert(
+        "Recipe edited successfully!"
+      );
     } else {
       formData.ingredients = selectedIngredients;
       machine.recipes.push(formData);
+      alert(
+        "Recipe added successfully! You can edit the ingredients in the recipe details page."
+      );
     }
 
     localStorage.setItem("machines", JSON.stringify(machines));
     reset();
     setShowRecipeForm(false);
-    alert(
-      "Recipe added successfully! You can edit the ingredients in the recipe details page."
-    );
   };
 
   const handleCategorySelect = (category) => {
@@ -75,20 +81,22 @@ function RecipeForm({
     setSelectedIngredients([]);
     setSelectedCategory("");
     setShowRecipeForm(false);
-    // resetEditRecipeData("");
+    resetEditRecipeData("");
   };
 
   const handleDeleteRecipe = () => {
-    const recipeIndex = recipes.findIndex(
+    const recipeIndex = machine.recipes.findIndex(
       (r) => r.recipeId === editRecipeData.recipeId
     );
 
     if (recipeIndex !== -1) {
-      recipes.splice(recipeIndex, 1);
-      localStorage.setItem("recipes", JSON.stringify(recipes));
+      machine.recipes.splice(recipeIndex, 1);
+      localStorage.setItem("machines", JSON.stringify(machines));
     }
 
     handleClose();
+    alert("Recipe deleted successfully!")
+    navigate(`/machine-details/${machineId}`)
   };
 
   return (
@@ -214,7 +222,7 @@ function RecipeForm({
           defaultValue={0}
           {...register("sold", { required: true })}
           className="w-full px-3 py-2 bg-[#333333] rounded-lg focus:outline-none border border-[#131313] focus:border-[#6EE7B7]"
-          readOnly
+          disabled={!( editRecipeData && Object.keys(editRecipeData).length > 0)}
         />
       </div>
       <div className="flex flex-col-reverse md:flex-row-reverse justify-between pt-5 gap-7">
