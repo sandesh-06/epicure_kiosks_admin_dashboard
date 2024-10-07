@@ -8,7 +8,7 @@ function Machines() {
     { headerName: "Temperature", field: "temperature" },
     { headerName: "Status", field: "operational" },
     { headerName: "Last Order", field: "lastOrder" },
-    { headerName: "Details", field: "action" },
+    { headerName: "Actions", field: "details" },
   ];
 
   const data = JSON.parse(localStorage.getItem("machines"));
@@ -19,7 +19,7 @@ function Machines() {
     temperature: machine.status.temperature + "F",
     operational: machine.status.operational ? "Operational" : "Maintainance",
     lastOrder: machine.lastOrder,
-    action: "View",
+    details: "View",
     path: `/machine-details/${machine.machineId}`,
   }));
 

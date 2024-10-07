@@ -1,12 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const Table = ({
-  columns,
-  data,
-  forEdit = false,
-  handleEdit,
-}) => {
+const Table = ({ columns, data, forEdit = false, handleEdit }) => {
   return (
     <div className="overflow-x-auto rounded-xl border border-[#161111]">
       <table
@@ -47,8 +42,8 @@ const Table = ({
                     key={colIndex}
                     className="py-4 px-6 text-sm md:text-base text-white"
                   >
-                    {column.field === "action" ? (
-                      forEdit ? (
+                    {(column.headerName === "Actions") ? (
+                      column.field === 'action' ? (
                         <button
                           className="h-full cursor-pointer bg-gray-700 px-2 py-1 rounded-xl hover:bg-gray-800"
                           onClick={() => handleEdit(row)}

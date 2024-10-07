@@ -17,47 +17,60 @@ function DispenserForm({
     setValue,
     watch,
     formState: { errors },
-  } = useForm();
+  } = useForm()
 
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedIngredient, setSelectedIngredient] = useState("");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [selectedIngredient, setSelectedIngredient] = useState("")
 
-  const capacity = watch("capacity");
-  const quantity = watch("quantity");
+  const capacity = watch("capacity")
+  const quantity = watch("quantity")
 
   // Pre-fill the form if editDispenserData is provided
   useEffect(() => {
     if (editDispenserData && Object.keys(editDispenserData).length > 0) {
       setValue("dispenserId", editDispenserData.dispenserId);
-      setValue("ingredientName", editDispenserData.ingredient);
-      setValue("ingredientId", editDispenserData.ingredientId);
-      setValue("capacity", editDispenserData.capacity);
-      setValue("quantity", editDispenserData.quantity);
-      setSelectedIngredient(editDispenserData.ingredient);
+      setValue("ingredientName", editDispenserData.ingredient)
+      setValue("ingredientId", editDispenserData.ingredientId)
+      setValue("capacity", editDispenserData.capacity)
+      setValue("quantity", editDispenserData.quantity)
+      setSelectedIngredient(editDispenserData.ingredient)
     }
-  }, [editDispenserData, setValue]);
+  }, [editDispenserData, setValue])
 
   const onSubmit = (formData) => {
     const machine = machines.find((m) => m.machineId === machineId);
 
-    if (editDispenserData && Object.keys(editDispenserData).length > 0) {
-      // Editing existing dispenser
-      const dispenserIndex = machine.dispensers.findIndex(
-        (d) => d.dispenserId === editDispenserData.dispenserId
-      );
-      machine.dispensers[dispenserIndex] = formData;
-    } else {
-      // Adding new dispenser
-      machine.dispensers.push(formData);
+    if (!machine) {
+      console.error("Machine not found");
+      return
     }
 
-    // Update the machine data in localstorage
-    localStorage.setItem("machines", JSON.stringify(machines));
-    setSelectedIngredient({});
-    reset();
+    if (editDispenserData && Object.keys(editDispenserData).length > 0) {
+      const dispenserIndex = machine.dispensers.findIndex(
+        (d) => d.dispenserId === editDispenserData.dispenserId
+      )
+
+      if (dispenserIndex !== -1) {
+        machine.dispensers[dispenserIndex] = {
+          ...machine.dispensers[dispenserIndex],
+          ...formData, 
+          dispenserId: editDispenserData.dispenserId, 
+        };
+      } else {
+        console.error("Dispenser not found for editing")
+      }
+    } else {
+      const newDispenser = {
+        ...formData,
+      };
+      machine.dispensers.push(newDispenser)
+    }
+
+    localStorage.setItem("machines", JSON.stringify(machines))
+    reset()
+    handleClose()
   };
 
-  //to delete the dispenser data
   const handleDeleteDispenser = () => {
     const machine = machines.find((m) => m.machineId === machineId);
 
@@ -207,7 +220,9 @@ function DispenserForm({
         <button
           type="button"
           className={`${
-            editDispenserData && Object.keys(editDispenserData).length > 0 ? "block" : "hidden"
+            editDispenserData && Object.keys(editDispenserData).length > 0
+              ? "block"
+              : "hidden"
           } px-4 py-2 text-sm sm:text-md text-black font-medium bg-[#f36e6e] rounded-lg hover:bg-[#f15656] focus:outline-none`}
           onClick={handleDeleteDispenser}
         >
@@ -218,7 +233,9 @@ function DispenserForm({
           type="submit"
           className="px-4 py-2 text-sm sm:text-md text-black font-medium bg-[#6EE7B7] rounded-lg hover:bg-[#12f097] focus:outline-none"
         >
-          {editDispenserData && Object.keys(editDispenserData).length > 0 ? "Edit Dispenser" : "Add Dispenser"}
+          {editDispenserData && Object.keys(editDispenserData).length > 0
+            ? "Edit Dispenser"
+            : "Add Dispenser"}
         </button>
       </div>
     </form>

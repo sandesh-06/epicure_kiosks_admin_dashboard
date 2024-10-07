@@ -28,7 +28,7 @@ export const data = [
       "recipes": [
         {
           "recipeId": "R1",
-          "name": "Cappuccino",
+          "recipeName": "Cappuccino",
           "category": "Beverages",
           "sold": 128,
           "ingredients": [
@@ -82,7 +82,7 @@ export const data = [
       "recipes": [
         {
           "recipeId": "R2",
-          "name": "Margherita Pizza",
+          "recipeName": "Margherita Pizza",
           "category": "Fast Food",
           "sold": 98,
           "ingredients": [
@@ -134,7 +134,7 @@ export const data = [
       "recipes": [
         {
           "recipeId": "R3",
-          "name": "Spaghetti Aglio e Olio",
+          "recipeName": "Spaghetti Aglio e Olio",
           "category": "Fast Food",
           "sold": 116,
           "ingredients": [
@@ -181,7 +181,7 @@ export const data = [
       "recipes": [
         {
           "recipeId": "R4",
-          "name": "Chow Mein",
+          "recipeName": "Chow Mein",
           "category": "Fast Food",
           "sold": 110,
           "ingredients": [
@@ -228,7 +228,7 @@ export const data = [
       "recipes": [
         {
           "recipeId": "R5",
-          "name": "Chocolate Sundae",
+          "recipeName": "Chocolate Sundae",
           "category": "Dessert",
           "sold": 231,
           "ingredients": [
@@ -275,7 +275,7 @@ export const data = [
       "recipes": [
         {
           "recipeId": "R6",
-          "name": "Berry Banana Smoothie",
+          "recipeName": "Berry Banana Smoothie",
           "category": "Dessert",
           "sold": 287,
           "ingredients": [
@@ -329,7 +329,7 @@ export const data = [
       "recipes": [
         {
           "recipeId": "R7",
-          "name": "Cheeseburger",
+          "recipeName": "Cheeseburger",
           "category": "Fast Food",
           "sold": 221,
           "ingredients": [
@@ -381,7 +381,7 @@ export const data = [
       "recipes": [
         {
           "recipeId": "R1",
-          "name": "Veggie Wrap",
+          "recipeName": "Veggie Wrap",
           "category": "Fast Food",
           "sold": 221,
           "ingredients": [

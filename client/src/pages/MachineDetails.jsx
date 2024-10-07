@@ -24,6 +24,7 @@ function MachineDetails() {
     { headerName: "Category", field: "category" },
     { headerName: "Sold", field: "sold" },
     { headerName: "Actions", field: "action" },
+    { headerName: "Actions", field: "details" },
   ];
 
   const machines = JSON.parse(localStorage.getItem("machines"));
@@ -50,10 +51,11 @@ function MachineDetails() {
   const recipeData = useMemo(() => {
     return machineData.recipes.map((recipe) => ({
       recipeId: recipe.recipeId,
-      recipeName: recipe.name,
+      recipeName: recipe.recipeName,
       category: recipe.category,
       sold: recipe.sold,
-      action: "Edit",
+      ingredients: recipe.ingredients,
+      details: "View",
       path: `/machine-details/${machineId}/recipe-details/${recipe.recipeId}`,
     }));
   }, [machineData, machines]);
@@ -99,7 +101,7 @@ function MachineDetails() {
   };
   const handleEditRecipe = (recipe) => {
     setSelectedRecipe(recipe);
-    navigation(recipe?.path)
+    setShowRecipeForm(true);
   };
   return (
     <div className="container mx-auto text-white lg:mt-4 py-10 px-8 lg:px-0 lg:py-0">
@@ -192,6 +194,8 @@ function MachineDetails() {
         <RecipeForm
           setShowRecipeForm={setShowRecipeForm}
           machineId={machineId}
+          editRecipeData={selectedRecipe}
+          resetEditRecipeData={setSelectedRecipe}
         />
       </Modal>
     </div>

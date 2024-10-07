@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import { IngredientForm, Modal, RecipeForm, Table } from "../components";
+import { IngredientForm, Modal,  Table } from "../components";
 const RecipeDetails = () => {
   const ingredientsColumns = [
     { headerName: "Ingredient ID", field: "ingredientId" },
@@ -10,9 +10,6 @@ const RecipeDetails = () => {
   ];
   const [showIngredientForm, setShowIngredientForm] = useState(false);
   const [selectedIngredient, setSelectedIngredient] = useState("");
-
-  const [showRecipeForm, setShowRecipeForm] = useState(false);
-  const [selectedRecipe, setSelectedRecipe] = useState("");
 
   const { machineId, recipeId } = useParams();
   const machines = JSON.parse(localStorage.getItem("machines"));
@@ -28,10 +25,6 @@ const RecipeDetails = () => {
     return null;
   }, [machineId, recipeId, machines]);
 
-  const handleRecipeEdit = () => {
-    setSelectedRecipe(recipeDetails);
-    setShowRecipeForm(true);
-  };
   const handleIngredientEdit = (ingredient) => {
     setSelectedIngredient(ingredient);
     setShowIngredientForm(true);
@@ -43,14 +36,14 @@ const RecipeDetails = () => {
       <div className="mb-8 flex flex-col gap-2">
         <div className="w-full flex justify-between items-center">
           <h2 className="text-3xl md:text-5xl font-semibold mb-2">
-            {recipeDetails?.name}
+            {recipeDetails?.recipeName}
           </h2>
-          <button
+          {/* <button
             className="h-8 rounded-lg px-2 text-sm font-medium bg-[#6EE7B7] hover:bg-[#11e792] text-black cursor-pointer "
             onClick={handleRecipeEdit}
           >
             <span className="">Edit Recipe</span>
-          </button>
+          </button> */}
         </div>
         <p className="text-lg md:text-xl text-gray-400 font-medium">
           Recipe ID: <span className="">{recipeDetails?.recipeId}</span>
@@ -100,15 +93,6 @@ const RecipeDetails = () => {
         </div>
       </div>
 
-      {/* Recipe Form */}
-      <Modal isOpen={showRecipeForm}>
-        <RecipeForm
-          setShowRecipeForm={setShowRecipeForm}
-          machineId={machineId}
-          editRecipeData={selectedRecipe}
-          resetEditRecipeData={setSelectedRecipe}
-        />
-      </Modal>
       {/* Ingredient Form */}
       <Modal isOpen={showIngredientForm}>
         <IngredientForm

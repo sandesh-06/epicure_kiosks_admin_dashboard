@@ -4,15 +4,14 @@ import { useNavigate } from "react-router-dom";
 
 function RecipeForm({
   setShowRecipeForm,
-  editRecipeData = {},
+  editRecipeData,
   machineId,
   resetEditRecipeData,
 }) {
-  const ingredientData = JSON.parse(localStorage.getItem("ingredients"));
   const categories = ["Fast Food", "Dessert", "Beverages"];
-  const machines = JSON.parse(localStorage.getItem("machines"))
+  const machines = JSON.parse(localStorage.getItem("machines"));
   const machine = machines.find((m) => m.machineId === machineId);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -21,17 +20,13 @@ function RecipeForm({
     formState: { errors },
   } = useForm();
 
-  const [selectedIngredients, setSelectedIngredients] = useState([]);
-  const [isCategoryDropdownOpen, setisCategoryDropdownOpen] = useState(false);
-  const [isIngridentDropdownOpen, setisIngridentDropdownOpen] = useState(false);
+  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("");
 
-  console.log(machines)
   useEffect(() => {
-
     if (editRecipeData && Object.keys(editRecipeData).length > 0) {
       setValue("recipeId", editRecipeData.recipeId);
-      setValue("name", editRecipeData.name);
+      setValue("recipeName", editRecipeData.recipeName);
       setValue("category", editRecipeData.category);
       setValue("sold", editRecipeData.sold);
       setSelectedCategory(editRecipeData.category);
@@ -43,45 +38,41 @@ function RecipeForm({
       const recipeIndex = machine.recipes.findIndex(
         (r) => r.recipeId === editRecipeData.recipeId
       );
-      formData.ingredients = machine.recipes[recipeIndex].ingredients
-      machine.recipes[recipeIndex] = formData;
-      alert(
-        "Recipe edited successfully!"
-      );
+      console.log(editRecipeData)
+      if (recipeIndex !== -1) {
+        formData.ingredients = editRecipeData.ingredients
+        machine.recipes[recipeIndex] = formData
+        alert("Recipe edited successfully!")
+      }
     } else {
-      formData.ingredients = selectedIngredients;
-      machine.recipes.push(formData);
-      alert(
-        "Recipe added successfully! You can edit the ingredients in the recipe details page."
-      );
-    }
 
+      if (!selectedCategory) {
+        alert("Please select a category.")
+        return;
+      }
+      formData.ingredients = []; 
+      formData.category = selectedCategory; 
+      machine.recipes.push(formData);
+      alert("Recipe added successfully!");
+    }
     localStorage.setItem("machines", JSON.stringify(machines));
     reset();
-    setShowRecipeForm(false);
+    handleClose();
   };
 
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
     setValue("category", category);
-    setisCategoryDropdownOpen(false);
-  };
-
-  const handleIngredientSelect = (ingredientName, ingredientId) => {
-    if (!selectedIngredients.some((ing) => ing.ingredientId === ingredientId)) {
-      setSelectedIngredients((prevIngredients) => [
-        ...prevIngredients,
-        { ingredientName, ingredientId, quantity:0 },
-      ]);
-    }
+    setIsCategoryDropdownOpen(false);
   };
 
   const handleClose = () => {
     reset();
-    setSelectedIngredients([]);
     setSelectedCategory("");
     setShowRecipeForm(false);
-    resetEditRecipeData("");
+    if (editRecipeData && Object.keys(editRecipeData).length > 0) {
+      resetEditRecipeData("");
+    }
   };
 
   const handleDeleteRecipe = () => {
@@ -92,11 +83,10 @@ function RecipeForm({
     if (recipeIndex !== -1) {
       machine.recipes.splice(recipeIndex, 1);
       localStorage.setItem("machines", JSON.stringify(machines));
+      alert("Recipe deleted successfully!");
+      handleClose();
+      navigate(`/machine-details/${machineId}`);
     }
-
-    handleClose();
-    alert("Recipe deleted successfully!")
-    navigate(`/machine-details/${machineId}`)
   };
 
   return (
@@ -126,13 +116,13 @@ function RecipeForm({
         </label>
         <input
           type="text"
-          {...register("name", { required: "Recipe Name is required" })}
+          {...register("recipeName", { required: "Recipe Name is required" })}
           className="w-full px-3 py-2 bg-[#333333] rounded-lg focus:outline-none border border-[#131313] focus:border-[#6EE7B7]"
           placeholder="Enter Recipe Name"
         />
-        {errors.name && (
+        {errors.recipeName && (
           <p className="text-red-500 text-sm mt-1">
-            {errors.name.message}
+            {errors.recipeName.message}
           </p>
         )}
       </div>
@@ -144,7 +134,7 @@ function RecipeForm({
         <div className="relative">
           <div
             className="w-full px-3 py-2 bg-[#333333] rounded-lg cursor-pointer border border-[#131313] focus:border-[#6EE7B7]"
-            onClick={() => setisCategoryDropdownOpen(!isCategoryDropdownOpen)}
+            onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
           >
             {selectedCategory ? selectedCategory : "-- Select Category --"}
           </div>
@@ -164,54 +154,12 @@ function RecipeForm({
         </div>
         <input
           type="hidden"
-          {...register("category", {
-            required: "Please select a category",
-          })}
+          {...register("category", { required: "Please select a category" })}
         />
         {errors.category && (
           <p className="text-red-500 text-sm mt-1">{errors.category.message}</p>
         )}
       </div>
-
-      {!editRecipeData.recipeId && (
-        <div>
-          <label className="block mb-3 text-lg md:text-xl font-medium">
-            Select Ingredients
-          </label>
-          <div className="relative">
-            <div
-              className="w-full px-3 py-2 bg-[#333333] rounded-lg cursor-pointer border border-[#131313] focus:border-[#6EE7B7]"
-              onClick={() =>
-                setisIngridentDropdownOpen(!isIngridentDropdownOpen)
-              }
-            >
-              {selectedIngredients.length
-                ? selectedIngredients
-                    .map((ing) => ing.ingredientName)
-                    .join(", ")
-                : "-- Select Ingredients --"}
-            </div>
-            {isIngridentDropdownOpen && (
-              <div className="absolute z-10 w-full max-h-40 bg-[#333333] border border-[#131313] mt-1 overflow-y-auto rounded-lg">
-                {ingredientData.map((ingredient) => (
-                  <div
-                    key={ingredient.ingredientId}
-                    onClick={() =>
-                      handleIngredientSelect(
-                        ingredient.ingredientName,
-                        ingredient.ingredientId
-                      )
-                    }
-                    className="px-3 py-2 hover:bg-gray-700 cursor-pointer"
-                  >
-                    {ingredient.ingredientName}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
 
       <div>
         <label className="block mb-3 text-lg md:text-xl font-medium">
@@ -222,9 +170,10 @@ function RecipeForm({
           defaultValue={0}
           {...register("sold", { required: true })}
           className="w-full px-3 py-2 bg-[#333333] rounded-lg focus:outline-none border border-[#131313] focus:border-[#6EE7B7]"
-          disabled={!( editRecipeData && Object.keys(editRecipeData).length > 0)}
+          disabled={!(editRecipeData && Object.keys(editRecipeData).length > 0)}
         />
       </div>
+
       <div className="flex flex-col-reverse md:flex-row-reverse justify-between pt-5 gap-7">
         <button
           type="button"
