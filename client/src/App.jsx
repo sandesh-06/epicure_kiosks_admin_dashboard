@@ -11,11 +11,12 @@ function App() {
     localStorage.setItem("dispensers", JSON.stringify(dispenserData));
   }, []);
 
+
   return (
     <>
       <Header />
       <main className="pt-16 min-h-screen bg-[#141414] custom-scrollbar">
-        <Outlet />
+       {localStorage.getItem("machines") && <Outlet />}
       </main>
     </>
   );
