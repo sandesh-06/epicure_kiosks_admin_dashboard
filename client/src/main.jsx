@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import {Machines, MachineDetails, RecipeDetails} from './pages/index.js'
+import {Machines, MachineDetails, RecipeDetails, Dispensers, Ingredients, Recipes} from './pages/index.js'
 
 const router = createBrowserRouter([
   {
@@ -27,6 +27,18 @@ const router = createBrowserRouter([
         element: (
          <RecipeDetails />
         )
+      },
+      {
+        path: "/dispensers",
+        element: <Dispensers />,
+      },
+      {
+        path: "/ingredients",
+        element: <Ingredients />,
+      },
+      {
+        path: "/recipes",
+        element: <Recipes />,
       },
     ]
   },

@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Search, Table } from "../components";
-
 
 function Machines() {
   const columns = [
@@ -12,19 +11,17 @@ function Machines() {
     { headerName: "Details", field: "action" },
   ];
 
-  const data = JSON.parse(localStorage.getItem("machines"))
-    const extractedData = data?.map(machine => ({
-      machineId: machine.machineId,
-      name: machine.name, 
-      location: machine.location, 
-      temperature: machine.status.temperature + "F", 
-      operational: machine.status.operational ? "Operational" : "Maintainance", 
-      lastOrder: machine.lastOrder, 
-      action: "View",
-      path: `/machine-details/${machine.machineId}`
-    }));
-
-  
+  const data = JSON.parse(localStorage.getItem("machines"));
+  const extractedData = data?.map((machine) => ({
+    machineId: machine.machineId,
+    name: machine.name,
+    location: machine.location,
+    temperature: machine.status.temperature + "F",
+    operational: machine.status.operational ? "Operational" : "Maintainance",
+    lastOrder: machine.lastOrder,
+    action: "View",
+    path: `/machine-details/${machine.machineId}`,
+  }));
 
   return (
     <div className="h-full lg:mt-4 py-10 px-8 lg:px-0 lg:py-0">

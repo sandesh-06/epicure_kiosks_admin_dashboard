@@ -11,7 +11,7 @@ const Header = () => {
     { label: "Kiosks", path: "/" },
     { label: "Dispensers", path: "/dispensers" },
     { label: "Ingredients", path: "/ingredients" },
-    { label: "Recipe", path: "/recipe" },
+    { label: "Recipe", path: "/recipes" },
   ];
 
   const [showMobileMenu, setShowMobileMenu] = useState(false);
